@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	)
 
 type Client struct {
@@ -23,6 +24,8 @@ type SearchParams struct {
 	SearchAfter string
 	User string
 	Group string
+	Url string
+	Tags[] string
 }
   
 type Row struct {
@@ -72,9 +75,12 @@ func NewClient(token string, params SearchParams, maxSearchResults int) *Client 
 
 func (client *Client) Search() ([]Row, error) {
 	params := client.params
+	tagArray := apply(params.Tags, paramWrap)
+	tags := strings.Join(tagArray, "")
 	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) + 
 		"&user=" + params.User + 
-		"&group=" + params.Group
+		"&group=" + params.Group +
+		tags
 	req, err := http.NewRequest("GET", url, nil)
 	if (client.token != "") {
 		req.Header.Add("Authorization", "Bearer "+client.token)
@@ -121,3 +127,14 @@ func (client *Client) SearchAll() ([]Row, error) {
 	return allRows, err
 }
 
+func apply(strings []string, fn func(string) string) []string {
+	var result []string
+	for _, item := range strings {
+		result = append(result, fn(item))
+	}
+	return result
+}
+
+func paramWrap(str string) string {
+  return fmt.Sprintf(`&tag=%s`, str)
+}

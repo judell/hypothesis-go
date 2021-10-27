@@ -55,4 +55,22 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 	}
 }
 
+func Test_Search_For_Two_Tags(t *testing.T) {
+	client := NewClient(
+		os.Getenv("H_TOKEN"), 
+		SearchParams{
+			Tags: []string{"media","review"},
+		},
+		10,
+	)
+	rows, err := client.SearchAll()
+
+	if err != nil {
+        t.Fatalf(`%v`, err)
+	}
+	if len(rows) != 10  {
+        t.Fatalf(`expected 10 rows, got %d, `, len(rows))
+    }
+}
+
 
