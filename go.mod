@@ -1,3 +1,3 @@
-module judell/hypothesis-go
+module github.com/judell/hypothesis-go
 
 go 1.17
