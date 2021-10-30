@@ -55,7 +55,7 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 	}
 }
 
-func Test_Search_For_Two_Tags(t *testing.T) {
+func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
 	client := NewClient(
 		os.Getenv("H_TOKEN"), 
 		SearchParams{
