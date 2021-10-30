@@ -1,3 +1,3 @@
-module example.com/hypothesis
+module judell/hypothesis-go
 
 go 1.17
