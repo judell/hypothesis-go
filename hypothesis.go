@@ -46,7 +46,8 @@ type SearchParams struct {
 	Any string
 	User string
 	Group string
-	Url string
+	Uri string
+	WildcardUri string
 	Tags[] string
 }
   
@@ -106,15 +107,17 @@ func (client *Client) Search() ([]Row, error) {
 	if client.params.Any != "" {
 		url += "&any=" + params.Any
 	}
-	if client.params.Url != "" {
-		url += "&uri=" + params.Url
+	if client.params.Uri != "" {
+		url += "&uri=" + params.Uri
+	} else {
+		if client.params.WildcardUri != "" {
+			url += "&wildcard_uri=" + params.WildcardUri
+		}
 	}
 	req, _ := http.NewRequest("GET", url, nil)
 	if (client.token != "") {
 		req.Header.Add("Authorization", "Bearer "+client.token)
 	}
-
-//	fmt.Printf("%+v", req)
 
 	r, err := client.httpClient.Do(req)
 	if err != nil {
@@ -130,8 +133,6 @@ func (client *Client) Search() ([]Row, error) {
 	if searchResult.Total <= client.maxSearchResults {
 		client.maxSearchResults = searchResult.Total		
 	}
-
-//	fmt.Printf("%+v", searchResult.Rows)
 
 	return searchResult.Rows, nil
 }
