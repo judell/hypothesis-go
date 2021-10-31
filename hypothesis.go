@@ -102,6 +102,7 @@ func (client *Client) Search() ([]Row, error) {
 	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) + 
 		"&user=" + params.User + 
 		"&group=" + params.Group +
+		"&uri=" + params.Url +
 		tags
 	if client.params.Any != "" {
 		url += "&any=" + params.Any
@@ -182,4 +183,3 @@ func apply(strings []string, fn func(string) string) []string {
 func paramWrap(str string) string {
   return fmt.Sprintf(`&tag=%s`, str)
 }
-
