@@ -102,15 +102,20 @@ func (client *Client) Search() ([]Row, error) {
 	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) + 
 		"&user=" + params.User + 
 		"&group=" + params.Group +
-		"&uri=" + params.Url +
 		tags
 	if client.params.Any != "" {
 		url += "&any=" + params.Any
+	}
+	if client.params.Url != "" {
+		url += "&uri=" + params.Url
 	}
 	req, _ := http.NewRequest("GET", url, nil)
 	if (client.token != "") {
 		req.Header.Add("Authorization", "Bearer "+client.token)
 	}
+
+//	fmt.Printf("%+v", req)
+
 	r, err := client.httpClient.Do(req)
 	if err != nil {
 		return []Row{}, fmt.Errorf("error getting Hypothesis search results for %s: %v+", url, err.Error())
@@ -125,6 +130,9 @@ func (client *Client) Search() ([]Row, error) {
 	if searchResult.Total <= client.maxSearchResults {
 		client.maxSearchResults = searchResult.Total		
 	}
+
+//	fmt.Printf("%+v", searchResult.Rows)
+
 	return searchResult.Rows, nil
 }
 

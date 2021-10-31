@@ -41,16 +41,18 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 		SearchParams{
 			Group: os.Getenv("H_GROUP"),
 		},
-		20,
+		1,
 	)
 	rows, err := client.SearchAll()
 
 	if err != nil {
         t.Fatalf(`%v`, err)
 	}
-	if len(rows) != 20 {
-        t.Fatalf(`expected 20 rows, got %d, `, len(rows))
-    }
+
+	if len(rows) != 1 {
+        t.Fatalf(`expected 1 row, got %d, `, len(rows))
+	}
+
 	if rows[0].Group != client.params.Group {
         t.Fatalf(`expected group %s, got %s, `, client.params.Group, rows[0].Group)
 	}
