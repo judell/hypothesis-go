@@ -112,5 +112,23 @@ func Test_Finds_A_Private_Annotation(t *testing.T) {
 	} 
 }
 
+func Test_Search_Param_Any_Finds_One_Annotations(t *testing.T) {
+	client := NewClient(
+		os.Getenv("H_TOKEN"),
+		SearchParams{
+			Any: "jon",
+		},
+		1,
+	)
 
+	rows, err := client.SearchAll()
 
+	if err != nil {
+        t.Fatalf(`%v`, err)
+	}
+
+	if len(rows) == 0 {
+        t.Fatalf(`%v`, err)
+	}
+
+}

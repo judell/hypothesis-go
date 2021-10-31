@@ -43,6 +43,7 @@ type SearchResult struct {
 
 type SearchParams struct {
 	SearchAfter string
+	Any string
 	User string
 	Group string
 	Url string
@@ -102,6 +103,9 @@ func (client *Client) Search() ([]Row, error) {
 		"&user=" + params.User + 
 		"&group=" + params.Group +
 		tags
+	if client.params.Any != "" {
+		url += "&any=" + params.Any
+	}
 	req, _ := http.NewRequest("GET", url, nil)
 	if (client.token != "") {
 		req.Header.Add("Authorization", "Bearer "+client.token)
