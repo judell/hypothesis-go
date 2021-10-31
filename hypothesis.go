@@ -15,6 +15,27 @@ type Client struct {
 	httpClient http.Client
 }
 
+type Profile struct {
+	Userid    string `json:"userid"`
+	Authority string `json:"authority"`
+	Groups    []struct {
+		Name   string `json:"name"`
+		ID     string `json:"id"`
+		Public bool   `json:"public"`
+		URL    string `json:"url,omitempty"`
+	} `json:"groups"`
+	Features struct {
+		NotebookLaunch     bool `json:"notebook_launch"`
+		EmbedCachebuster   bool `json:"embed_cachebuster"`
+		ClientDisplayNames bool `json:"client_display_names"`
+	} `json:"features"`
+	Preferences struct {
+	} `json:"preferences"`
+	UserInfo struct {
+		DisplayName string `json:"display_name"`
+	} `json:"user_info"`
+}
+
 type SearchResult struct {
 	Total int `json:"total"`
 	Rows []Row `json:"rows"`
@@ -81,11 +102,10 @@ func (client *Client) Search() ([]Row, error) {
 		"&user=" + params.User + 
 		"&group=" + params.Group +
 		tags
-	req, err := http.NewRequest("GET", url, nil)
+	req, _ := http.NewRequest("GET", url, nil)
 	if (client.token != "") {
 		req.Header.Add("Authorization", "Bearer "+client.token)
 	}
-	//fmt.Printf("URL: %v\n", url)
 	r, err := client.httpClient.Do(req)
 	if err != nil {
 		return []Row{}, fmt.Errorf("error getting Hypothesis search results for %s: %v+", url, err.Error())
@@ -125,6 +145,26 @@ func (client *Client) SearchAll() ([]Row, error) {
 		allRows = allRows[0:client.maxSearchResults]
 	}
 	return allRows, err
+}
+
+func (client *Client) Profile() (Profile, error) {
+	url := "https://hypothes.is/api/profile"
+	req, _ := http.NewRequest("GET", url, nil)
+	if (client.token != "") {
+		req.Header.Add("Authorization", "Bearer "+client.token)
+	}
+	r, err := client.httpClient.Do(req)
+	if err != nil {
+		return Profile{}, fmt.Errorf("error getting Hypothesis profile %d %v+", r.StatusCode, err.Error())
+	}
+	if r.StatusCode != 200 {
+		return Profile{}, fmt.Errorf("error getting Hypothesis profile %d %v+",  r.StatusCode, r.Status)
+	}
+	defer r.Body.Close()
+	decoder := json.NewDecoder(r.Body)
+	var profile Profile
+	_ = decoder.Decode(&profile)
+	return profile, err
 }
 
 func apply(strings []string, fn func(string) string) []string {

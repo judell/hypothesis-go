@@ -54,7 +54,6 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
         t.Fatalf(`expected group %s, got %s, `, client.params.Group, rows[0].Group)
 	}
 }
-
 func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
 	client := NewClient(
 		os.Getenv("H_TOKEN"), 
@@ -72,5 +71,46 @@ func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
         t.Fatalf(`expected 10 rows, got %d, `, len(rows))
     }
 }
+
+func Test_Profile(t *testing.T) {
+	client := NewClient(
+		os.Getenv("H_TOKEN"), 
+		SearchParams{},
+		0,
+	)
+	profile, err := client.Profile()
+
+	if len(profile.Groups) == 1 {
+        t.Fatalf(`%v`, err)
+	}
+
+	if err != nil {
+        t.Fatalf(`%v`, err)
+	}
+}
+func Test_Finds_A_Private_Annotation(t *testing.T) {
+	client := NewClient(
+		os.Getenv("H_TOKEN"), 
+		SearchParams{
+			Group: os.Getenv("H_GROUP"),
+		},
+		1,
+	)
+	
+	rows, err := client.SearchAll()
+
+	if err != nil {
+        t.Fatalf(`%v`, err)
+	}
+
+	if len(rows) == 0 {
+        t.Fatalf(`%v`, err)
+	}
+
+	if rows[0].Group == "__world__" {
+        t.Fatalf(`%v`, err)
+	} 
+}
+
 
 
