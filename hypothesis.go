@@ -192,3 +192,4 @@ func apply(strings []string, fn func(string) string) []string {
 func paramWrap(str string) string {
   return fmt.Sprintf(`&tag=%s`, str)
 }
+
