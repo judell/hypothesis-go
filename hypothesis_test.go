@@ -9,7 +9,7 @@ func Test_Search_Finds_Default_2000_Rows(t *testing.T) {
 	client := NewClient(
 		"", 
 		SearchParams{},
-		0,
+		2000,
 	)
 	rows, err := client.SearchAll()
 

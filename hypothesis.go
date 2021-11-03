@@ -83,7 +83,7 @@ func NewClient(token string, params SearchParams, maxSearchResults int) *Client 
 
 	var _maxSearchResults int
 	if maxSearchResults == 0 {
-		_maxSearchResults = 2000
+		_maxSearchResults = 400
 	} else {
 		_maxSearchResults = maxSearchResults
 	}
