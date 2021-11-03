@@ -72,9 +72,21 @@ func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
 	if err != nil {
         t.Fatalf(`%v`, err)
 	}
+
 	if len(rows) != count  {
         t.Fatalf(`expected %d rows, got %d, `, count, len(rows))
     }
+
+	for _, row := range rows {
+
+		matchesMedia := stringMatchesAnyStringInSlice("media", row.Tags)
+		matchesReview := stringMatchesAnyStringInSlice("review", row.Tags)
+
+		if ! ( matchesMedia && matchesReview ) {
+			t.Fatalf(`expected "media" and "review" among tags, got %v`, row.Tags)
+		}
+	}
+
 }
 
 func Test_Search_For_User_Finds_3_Annos_For_User(t *testing.T) {
@@ -215,4 +227,15 @@ func Test_Search_Param_Any_Finds_One_Annotation(t *testing.T) {
 	if len(rows) != count {
         t.Fatalf(`expected %d rows, got %d `, count, len(rows))
 	}
+}
+
+func stringMatchesAnyStringInSlice(str string, strings []string) bool {
+	var ret = false
+    for _, _str := range strings {
+		m, _ := regexp.Match(str, []byte(_str))
+		if m {
+			ret = true
+		}
+     }
+	return ret
 }
