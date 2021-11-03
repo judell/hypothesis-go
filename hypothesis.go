@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	)
 
@@ -43,6 +44,7 @@ type SearchResult struct {
 
 type SearchParams struct {
 	SearchAfter string
+	Limit string
 	Any string
 	User string
 	Group string
@@ -82,11 +84,17 @@ type Row struct {
 func NewClient(token string, params SearchParams, maxSearchResults int) *Client {
 
 	var _maxSearchResults int
+
 	if maxSearchResults == 0 {
 		_maxSearchResults = 400
-	} else {
+	}
+	if maxSearchResults > 0 {
 		_maxSearchResults = maxSearchResults
 	}
+	if params.Limit != "" {
+		_maxSearchResults, _ = strconv.Atoi(params.Limit)
+	}
+
 	client := &Client{
 		token:  token,
 		params: params,
@@ -100,7 +108,7 @@ func (client *Client) Search() ([]Row, error) {
 	params := client.params
 	tagArray := apply(params.Tags, tagParamWrap)
 	tags := strings.Join(tagArray, "")
-	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) + 
+ 	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) + 
 		"&user=" + params.User + 
 		"&group=" + params.Group +
 		tags

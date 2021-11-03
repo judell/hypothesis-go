@@ -1,48 +1,51 @@
 package hypothesis
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 	"testing"
 )
 func Test_Search_Finds_Default_2000_Rows(t *testing.T) {
+	expect := 2000
 	client := NewClient(
 		"", 
 		SearchParams{},
-		2000,
+		expect,
 	)
 	rows, err := client.SearchAll()
 
 	if err != nil {
         t.Fatalf(`%v`, err)
 	}
-	if len(rows) != 2000 {
-        t.Fatalf(`expected 2000 rows, got %d, `, len(rows))
+	if len(rows) != expect {
+        t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
     }
 }
 func Test_Search_For_215_Rows_Finds_215_Rows(t *testing.T) {
-	count := 215
+	expect := 215
 	client := NewClient(
 		"", 
 		SearchParams{},
-		count,
+		expect,
 	)
 	rows, err := client.SearchAll()
 
 	if err != nil {
         t.Fatalf(`%v`, err)
 	}
-	if len(rows) != count {
-        t.Fatalf(`expected 215 rows, got %d, `, len(rows))
+	if len(rows) != expect {
+        t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
     }
 }
 func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
+	expect := 1
 	client := NewClient(
 		os.Getenv("H_TOKEN"), 
 		SearchParams{
 			Group: os.Getenv("H_GROUP"),
 		},
-		1,
+		expect,
 	)
 	rows, err := client.SearchAll()
 
@@ -51,7 +54,7 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 	}
 
 	if len(rows) != 1 {
-        t.Fatalf(`expected 1 row, got %d, `, len(rows))
+        t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
 	}
 
 	if rows[0].Group != client.params.Group {
@@ -59,13 +62,13 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 	}
 }
 func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
-	count := 10
+	expect := 10
 	client := NewClient(
 		os.Getenv("H_TOKEN"), 
 		SearchParams{
 			Tags: []string{"media","review"},
 		},
-		count,
+		expect,
 	)
 	rows, err := client.SearchAll()
 
@@ -73,8 +76,8 @@ func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
         t.Fatalf(`%v`, err)
 	}
 
-	if len(rows) != count  {
-        t.Fatalf(`expected %d rows, got %d, `, count, len(rows))
+	if len(rows) != expect  {
+        t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
     }
 
 	for _, row := range rows {
@@ -90,13 +93,13 @@ func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
 }
 
 func Test_Search_For_Compound_Tag_Finds_3_Tags(t *testing.T) {
-	count := 3 
+	expect := 3 
 	client := NewClient(
 		os.Getenv("H_TOKEN"), 
 		SearchParams{
 			Tags: []string{"social media"},
 		},
-		count,
+		expect,
 	)
 	rows, err := client.SearchAll()
 
@@ -104,8 +107,8 @@ func Test_Search_For_Compound_Tag_Finds_3_Tags(t *testing.T) {
         t.Fatalf(`%v`, err)
 	}
 
-	if len(rows) != count  {
-        t.Fatalf(`expected %d rows, got %d, `, count, len(rows))
+	if len(rows) != expect  {
+        t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
     }
 
 	for _, row := range rows {
@@ -118,21 +121,21 @@ func Test_Search_For_Compound_Tag_Finds_3_Tags(t *testing.T) {
 
 func Test_Search_For_User_Finds_3_Annos_For_User(t *testing.T) {
 	user := "judell"
-	count := 3
+	expect := 3
 	client := NewClient(
 		os.Getenv("H_TOKEN"), 
 		SearchParams{
 			User: user,
 		},
-		count,
+		expect,
 	)
 	rows, err := client.SearchAll()
 
 	if err != nil {
         t.Fatalf(`%v`, err)
 	}
-	if len(rows) != count  {
-        t.Fatalf(`expected %d rows, got %d, `, count, len(rows))
+	if len(rows) != expect  {
+        t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
     }
 	for _, row := range rows {
 		m, _ := regexp.MatchString(user, row.User)
@@ -144,21 +147,21 @@ func Test_Search_For_User_Finds_3_Annos_For_User(t *testing.T) {
 
 func Test_Search_For_Uri_Finds_3_Annotations(t *testing.T) {
 	uri := "http://example.com/"
-	count := 3
+	expect := 3
 	client := NewClient(
 		os.Getenv("H_TOKEN"), 
 		SearchParams{
 			Uri: uri,
 		},
-		count,
+		expect,
 	)
 	rows, err := client.SearchAll()
 
 	if err != nil {
         t.Fatalf(`%v`, err)
 	}
-	if len(rows) != count  {
-        t.Fatalf(`expected %d rows, got %d, `, count, len(rows))
+	if len(rows) != expect  {
+        t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
     }
 	for _, row := range rows {
 		m, _ := regexp.MatchString(`example.com`, row.URI)
@@ -170,21 +173,21 @@ func Test_Search_For_Uri_Finds_3_Annotations(t *testing.T) {
 
 func Test_Search_For_Wildcard_Uri_Finds_3_Matching_Uris(t *testing.T) {
 	wildcardUri := "https://www.nytimes/*"
-	count := 3
+	expect := 3
 	client := NewClient(
 		os.Getenv("H_TOKEN"), 
 		SearchParams{
 			WildcardUri: wildcardUri,
 		},
-		count,
+		expect,
 	)
 	rows, err := client.SearchAll()
 
 	if err != nil {
         t.Fatalf(`%v`, err)
 	}
-	if len(rows) != count  {
-        t.Fatalf(`expected %d rows, got %d, `, count, len(rows))
+	if len(rows) != expect  {
+        t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
 	}
    
 	for _, row := range rows {
@@ -236,13 +239,13 @@ func Test_Finds_A_Private_Annotation(t *testing.T) {
 }
 
 func Test_Search_Param_Any_Finds_One_Annotation(t *testing.T) {
-	count := 1
+	expect := 1
 	client := NewClient(
 		os.Getenv("H_TOKEN"),
 		SearchParams{
 			Any: "jon",
 		},
-		count,
+		expect,
 	)
 
 	rows, err := client.SearchAll()
@@ -251,10 +254,54 @@ func Test_Search_Param_Any_Finds_One_Annotation(t *testing.T) {
         t.Fatalf(`%v`, err)
 	}
 
-	if len(rows) != count {
-        t.Fatalf(`expected %d rows, got %d `, count, len(rows))
+	if len(rows) != expect {
+        t.Fatalf(`expected %d rows, got %d `, expect, len(rows))
 	}
 }
+func Test_Limit_500_In_Search_Params_Yields_500_Rows(t *testing.T) {
+	expect := 500
+	client := NewClient(
+		os.Getenv("H_TOKEN"),
+		SearchParams{
+			Limit: fmt.Sprintf("%d", expect),
+		},
+		expect,
+	)
+
+	rows, err := client.SearchAll()
+
+	if err != nil {
+        t.Fatalf(`%v`, err)
+	}
+
+	if len(rows) != expect {
+        t.Fatalf(`expected %d rows, got %d `, expect, len(rows))
+	}
+	
+}
+func Test_SearchParams_Overrides_MaxSearchResults_500_To_Yield_501_Rows(t *testing.T) {
+	expect := 501
+	client := NewClient(
+		os.Getenv("H_TOKEN"),
+		SearchParams{
+			Limit: "501",
+		},
+		500,
+	)
+
+	rows, err := client.SearchAll()
+
+	if err != nil {
+        t.Fatalf(`%v`, err)
+	}
+
+	if len(rows) != 501 {
+        t.Fatalf(`expected %d rows, got %d `, expect, len(rows))
+	}
+	
+}
+
+
 
 func stringMatchesAnyStringInSlice(str string, strings []string) bool {
 	var ret = false
