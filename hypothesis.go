@@ -98,7 +98,7 @@ func NewClient(token string, params SearchParams, maxSearchResults int) *Client 
 
 func (client *Client) Search() ([]Row, error) {
 	params := client.params
-	tagArray := apply(params.Tags, paramWrap)
+	tagArray := apply(params.Tags, tagParamWrap)
 	tags := strings.Join(tagArray, "")
 	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) + 
 		"&user=" + params.User + 
@@ -189,6 +189,6 @@ func apply(strings []string, fn func(string) string) []string {
 	return result
 }
 
-func paramWrap(str string) string {
-  return fmt.Sprintf(`&tag=%s`, str)
+func tagParamWrap(str string) string {
+  return fmt.Sprintf(`&tag=%s`, strings.Replace(str, " ", "%20", -1))
 }

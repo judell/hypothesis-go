@@ -89,6 +89,33 @@ func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
 
 }
 
+func Test_Search_For_Compound_Tag_Finds_3_Tags(t *testing.T) {
+	count := 3 
+	client := NewClient(
+		os.Getenv("H_TOKEN"), 
+		SearchParams{
+			Tags: []string{"social media"},
+		},
+		count,
+	)
+	rows, err := client.SearchAll()
+
+	if err != nil {
+        t.Fatalf(`%v`, err)
+	}
+
+	if len(rows) != count  {
+        t.Fatalf(`expected %d rows, got %d, `, count, len(rows))
+    }
+
+	for _, row := range rows {
+		if ! ( stringMatchesAnyStringInSlice("social media", row.Tags) ) {
+			t.Fatalf(`expected "social media" among tags, got %v`, row.Tags)
+		}
+	}
+
+}
+
 func Test_Search_For_User_Finds_3_Annos_For_User(t *testing.T) {
 	user := "judell"
 	count := 3
