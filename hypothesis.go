@@ -7,13 +7,13 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-	)
+)
 
 type Client struct {
-	token string
-	params SearchParams
+	token            string
+	params           SearchParams
 	maxSearchResults int
-	httpClient http.Client
+	httpClient       http.Client
 }
 
 type Profile struct {
@@ -38,31 +38,31 @@ type Profile struct {
 }
 
 type SearchResult struct {
-	Total int `json:"total"`
-	Rows []Row `json:"rows"`
-  }
+	Total int   `json:"total"`
+	Rows  []Row `json:"rows"`
+}
 
 type SearchParams struct {
 	SearchAfter string
-	Limit string
-	Any string
-	User string
-	Group string
-	Uri string
+	Limit       string
+	Any         string
+	User        string
+	Group       string
+	Uri         string
 	WildcardUri string
-	Tags[] string
+	Tags        []string
 }
-  
+
 type Row struct {
-	ID          string        `json:"id"`
-	Created     string        `json:"created"`
-	Updated     string        `json:"updated"`
-	User        string        `json:"user"`
-	URI         string        `json:"uri"`
-	Text        string        `json:"text"`
-	Tags        []string      `json:"tags"`
-	Group       string        `json:"group"`
-	Target []struct {
+	ID      string   `json:"id"`
+	Created string   `json:"created"`
+	Updated string   `json:"updated"`
+	User    string   `json:"user"`
+	URI     string   `json:"uri"`
+	Text    string   `json:"text"`
+	Tags    []string `json:"tags"`
+	Group   string   `json:"group"`
+	Target  []struct {
 		Source   string `json:"source"`
 		Selector []struct {
 			End    int    `json:"end,omitempty"`
@@ -96,8 +96,8 @@ func NewClient(token string, params SearchParams, maxSearchResults int) *Client 
 	}
 
 	client := &Client{
-		token:  token,
-		params: params,
+		token:            token,
+		params:           params,
 		maxSearchResults: _maxSearchResults,
 	}
 
@@ -108,8 +108,8 @@ func (client *Client) Search() ([]Row, error) {
 	params := client.params
 	tagArray := apply(params.Tags, tagParamWrap)
 	tags := strings.Join(tagArray, "")
- 	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) + 
-		"&user=" + params.User + 
+	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) +
+		"&user=" + params.User +
 		"&group=" + params.Group +
 		tags
 	if client.params.Any != "" {
@@ -123,7 +123,7 @@ func (client *Client) Search() ([]Row, error) {
 		}
 	}
 	req, _ := http.NewRequest("GET", url, nil)
-	if (client.token != "") {
+	if client.token != "" {
 		req.Header.Add("Authorization", "Bearer "+client.token)
 	}
 
@@ -139,7 +139,7 @@ func (client *Client) Search() ([]Row, error) {
 	var searchResult SearchResult
 	_ = decoder.Decode(&searchResult)
 	if searchResult.Total <= client.maxSearchResults {
-		client.maxSearchResults = searchResult.Total		
+		client.maxSearchResults = searchResult.Total
 	}
 
 	return searchResult.Rows, nil
@@ -149,21 +149,21 @@ func (client *Client) SearchAll() ([]Row, error) {
 	allRows, err := client.Search()
 	if len(allRows) == 0 {
 		return allRows, nil
-	}	
+	}
 	lastRow := allRows[len(allRows)-1]
 	for {
 		client.params.SearchAfter = lastRow.Updated
 		moreRows, err := client.Search()
-		if (err != nil) {
+		if err != nil {
 			return allRows, err
 		}
 		allRows = append(allRows, moreRows...)
-		if (len(allRows) >= client.maxSearchResults) {
+		if len(allRows) >= client.maxSearchResults {
 			break
 		}
 		lastRow = moreRows[len(moreRows)-1]
-	}  
-	if (len(allRows) >= client.maxSearchResults) {
+	}
+	if len(allRows) >= client.maxSearchResults {
 		allRows = allRows[0:client.maxSearchResults]
 	}
 	return allRows, err
@@ -172,7 +172,7 @@ func (client *Client) SearchAll() ([]Row, error) {
 func (client *Client) Profile() (Profile, error) {
 	url := "https://hypothes.is/api/profile"
 	req, _ := http.NewRequest("GET", url, nil)
-	if (client.token != "") {
+	if client.token != "" {
 		req.Header.Add("Authorization", "Bearer "+client.token)
 	}
 	r, err := client.httpClient.Do(req)
@@ -180,7 +180,7 @@ func (client *Client) Profile() (Profile, error) {
 		return Profile{}, fmt.Errorf("error getting Hypothesis profile %d %v+", r.StatusCode, err.Error())
 	}
 	if r.StatusCode != 200 {
-		return Profile{}, fmt.Errorf("error getting Hypothesis profile %d %v+",  r.StatusCode, r.Status)
+		return Profile{}, fmt.Errorf("error getting Hypothesis profile %d %v+", r.StatusCode, r.Status)
 	}
 	defer r.Body.Close()
 	decoder := json.NewDecoder(r.Body)
@@ -198,5 +198,5 @@ func apply(strings []string, fn func(string) string) []string {
 }
 
 func tagParamWrap(str string) string {
-  return fmt.Sprintf(`&tag=%s`, strings.Replace(str, " ", "%20", -1))
+	return fmt.Sprintf(`&tag=%s`, strings.Replace(str, " ", "%20", -1))
 }
