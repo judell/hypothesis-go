@@ -192,15 +192,12 @@ func (client *Client) Profile() (Profile, error) {
 	return profile, err
 }
 
-func TargetToExact(target []Target) (string, error) {
+func SelectorsToExact(selectors []Selector) (string, error) {
 	empty := ""
-	if len(target) == 0 {
+	if len(selectors) == 0 {
 		return empty, nil
 	}
-	if len(target[0].Selector) == 0 {
-		return empty, nil
-	}
-	for _, sel := range target[0].Selector {
+	for _, sel := range selectors {
 		if sel.Type == "TextQuoteSelector" {
 			return sel.Exact, nil
 		}
