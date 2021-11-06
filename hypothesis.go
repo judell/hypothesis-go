@@ -60,22 +60,22 @@ type Selector = struct {
 	Exact  string `json:"exact,omitempty"`
 	Prefix string `json:"prefix,omitempty"`
 	Suffix string `json:"suffix,omitempty"`
-} 
+}
 
 type Target = struct {
 	Source   string `json:"source"`
 	Selector []Selector
 }
 type Row struct {
-	ID      string   `json:"id"`
-	Created string   `json:"created"`
-	Updated string   `json:"updated"`
-	User    string   `json:"user"`
-	URI     string   `json:"uri"`
-	Text    string   `json:"text"`
-	Tags    []string `json:"tags"`
-	Group   string   `json:"group"`
-	Target  []Target   `json:"target"`
+	ID       string   `json:"id"`
+	Created  string   `json:"created"`
+	Updated  string   `json:"updated"`
+	User     string   `json:"user"`
+	URI      string   `json:"uri"`
+	Text     string   `json:"text"`
+	Tags     []string `json:"tags"`
+	Group    string   `json:"group"`
+	Target   []Target `json:"target"`
 	Document struct {
 		Title []string `json:"title"`
 	} `json:"document"`
@@ -216,4 +216,3 @@ func apply(strings []string, fn func(string) string) []string {
 func tagParamWrap(str string) string {
 	return fmt.Sprintf(`&tag=%s`, strings.Replace(str, " ", "%20", -1))
 }
-

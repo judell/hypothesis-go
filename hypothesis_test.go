@@ -333,7 +333,6 @@ func Test_Selectors_To_Exact_Without_TextQuoteSelector_Returns_Empty(t *testing.
 	}
 }
 
-
 func stringMatchesAnyStringInSlice(str string, strings []string) bool {
 	var ret = false
 	for _, _str := range strings {
