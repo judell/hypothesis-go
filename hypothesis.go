@@ -216,3 +216,4 @@ func apply(strings []string, fn func(string) string) []string {
 func tagParamWrap(str string) string {
 	return fmt.Sprintf(`&tag=%s`, strings.Replace(str, " ", "%20", -1))
 }
+
