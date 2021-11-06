@@ -53,16 +53,18 @@ type SearchParams struct {
 	Tags        []string
 }
 
-type Target = []struct {
+type Selector = struct {
+	Type   string `json:"type"`
+	Start  int    `json:"start,omitempty"`
+	End    int    `json:"end,omitempty"`
+	Exact  string `json:"exact,omitempty"`
+	Prefix string `json:"prefix,omitempty"`
+	Suffix string `json:"suffix,omitempty"`
+} 
+
+type Target = struct {
 	Source   string `json:"source"`
-	Selector []struct {
-		End    int    `json:"end,omitempty"`
-		Type   string `json:"type"`
-		Start  int    `json:"start,omitempty"`
-		Exact  string `json:"exact,omitempty"`
-		Prefix string `json:"prefix,omitempty"`
-		Suffix string `json:"suffix,omitempty"`
-	} `json:"selector"`
+	Selector []Selector
 }
 type Row struct {
 	ID      string   `json:"id"`
@@ -73,7 +75,7 @@ type Row struct {
 	Text    string   `json:"text"`
 	Tags    []string `json:"tags"`
 	Group   string   `json:"group"`
-	Target  Target   `json:"target"`
+	Target  []Target   `json:"target"`
 	Document struct {
 		Title []string `json:"title"`
 	} `json:"document"`
@@ -188,6 +190,22 @@ func (client *Client) Profile() (Profile, error) {
 	var profile Profile
 	_ = decoder.Decode(&profile)
 	return profile, err
+}
+
+func TargetToExact(target []Target) (string, error) {
+	empty := ""
+	if len(target) == 0 {
+		return empty, nil
+	}
+	if len(target[0].Selector) == 0 {
+		return empty, nil
+	}
+	for _, sel := range target[0].Selector {
+		if sel.Type == "TextQuoteSelector" {
+			return sel.Exact, nil
+		}
+	}
+	return empty, nil
 }
 
 func apply(strings []string, fn func(string) string) []string {

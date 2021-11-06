@@ -302,6 +302,46 @@ func Test_SearchParams_Overrides_MaxSearchResults_500_To_Yield_501_Rows(t *testi
 
 }
 
+func Test_Target_To_Exact_Returns_Exact(t *testing.T) {
+	expect := "the exact quote"
+	text_quote_selector := Selector{"TextQuoteSelector", 0, 0, expect, "", ""}
+	text_position_selector := Selector{"TextPositionSelector", 1, 2, "", "", ""}
+	selectors := append([]Selector{}, text_quote_selector, text_position_selector)
+	target  := Target{}
+	target.Source = ""
+	target.Selector = selectors
+	targetArray := []Target{target}
+	exact, err := TargetToExact(targetArray)
+
+	if err != nil {
+		t.Fatalf(`%v`, err)
+	}
+
+	if expect != exact {
+		t.Fatalf(`expected %s, got %s `, expect, exact)
+	}
+}
+
+func Test_Target_To_Exact_Without_TextQuoteSelector_Returns_Empty(t *testing.T) {
+	expect := ""
+	text_position_selector := Selector{"TextPositionSelector", 1, 2, "", "", ""}
+	selectors := append([]Selector{}, text_position_selector)
+	target  := Target{}
+	target.Source = ""
+	target.Selector = selectors
+	targetArray := []Target{target}
+	exact, err := TargetToExact(targetArray)
+
+	if err != nil {
+		t.Fatalf(`%v`, err)
+	}
+
+	if expect != exact {
+		t.Fatalf(`expected %s, got %s `, expect, exact)
+	}
+}
+
+
 func stringMatchesAnyStringInSlice(str string, strings []string) bool {
 	var ret = false
 	for _, _str := range strings {
