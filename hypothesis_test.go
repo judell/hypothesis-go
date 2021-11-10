@@ -14,13 +14,16 @@ func Test_Search_Finds_Default_2000_Rows(t *testing.T) {
 		SearchParams{},
 		expect,
 	)
-	rows, err := client.SearchAll()
-
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rowCount := 0
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rowCount += 1
 	}
-	if len(rows) != expect {
-		t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
+
+	if rowCount != expect {
+		t.Fatalf(`expected %d rows, got %d, `, expect, rowCount)
 	}
 }
 func Test_Search_For_215_Rows_Finds_215_Rows(t *testing.T) {
@@ -30,15 +33,19 @@ func Test_Search_For_215_Rows_Finds_215_Rows(t *testing.T) {
 		SearchParams{},
 		expect,
 	)
-	rows, err := client.SearchAll()
-
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rowCount := 0
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rowCount += 1
 	}
-	if len(rows) != expect {
-		t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
+
+	if rowCount != expect {
+		t.Fatalf(`expected %d rows, got %d, `, expect, rowCount)
 	}
 }
+
 func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 	expect := 1
 	client := NewClient(
@@ -48,10 +55,13 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 		},
 		expect,
 	)
-	rows, err := client.SearchAll()
 
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
 
 	if len(rows) != 1 {
@@ -62,6 +72,7 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 		t.Fatalf(`expected group %s, got %s, `, client.params.Group, rows[0].Group)
 	}
 }
+
 func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
 	expect := 10
 	client := NewClient(
@@ -71,10 +82,13 @@ func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
 		},
 		expect,
 	)
-	rows, err := client.SearchAll()
 
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
 
 	if len(rows) != expect {
@@ -102,10 +116,13 @@ func Test_Search_For_Compound_Tag_Finds_3_Tags(t *testing.T) {
 		},
 		expect,
 	)
-	rows, err := client.SearchAll()
 
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
 
 	if len(rows) != expect {
@@ -130,11 +147,15 @@ func Test_Search_For_User_Finds_3_Annos_For_User(t *testing.T) {
 		},
 		expect,
 	)
-	rows, err := client.SearchAll()
 
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
+
 	if len(rows) != expect {
 		t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
 	}
@@ -156,11 +177,15 @@ func Test_Search_For_Uri_Finds_3_Annotations(t *testing.T) {
 		},
 		expect,
 	)
-	rows, err := client.SearchAll()
 
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
+
 	if len(rows) != expect {
 		t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
 	}
@@ -182,10 +207,13 @@ func Test_Search_For_Wildcard_Uri_Finds_3_Matching_Uris(t *testing.T) {
 		},
 		expect,
 	)
-	rows, err := client.SearchAll()
 
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
 	if len(rows) != expect {
 		t.Fatalf(`expected %d rows, got %d, `, expect, len(rows))
@@ -224,18 +252,20 @@ func Test_Finds_A_Private_Annotation(t *testing.T) {
 		1,
 	)
 
-	rows, err := client.SearchAll()
-
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
 
 	if len(rows) == 0 {
-		t.Fatalf(`%v`, err)
+		t.Fatalf("expected rows, got none")
 	}
 
 	if rows[0].Group == "__world__" {
-		t.Fatalf(`%v`, err)
+		t.Fatalf(`expected __world__, got %s`, rows[0].Group)
 	}
 }
 
@@ -249,10 +279,12 @@ func Test_Search_Param_Any_Finds_One_Annotation(t *testing.T) {
 		expect,
 	)
 
-	rows, err := client.SearchAll()
-
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
 
 	if len(rows) != expect {
@@ -269,10 +301,12 @@ func Test_Limit_500_In_Search_Params_Yields_500_Rows(t *testing.T) {
 		expect,
 	)
 
-	rows, err := client.SearchAll()
-
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
 
 	if len(rows) != expect {
@@ -290,10 +324,12 @@ func Test_SearchParams_Overrides_MaxSearchResults_500_To_Yield_501_Rows(t *testi
 		500,
 	)
 
-	rows, err := client.SearchAll()
-
-	if err != nil {
-		t.Fatalf(`%v`, err)
+	rows := []Row{}
+	for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		rows = append(rows, row)
 	}
 
 	if len(rows) != 501 {

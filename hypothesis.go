@@ -148,28 +148,40 @@ func (client *Client) Search() ([]Row, error) {
 	return searchResult.Rows, nil
 }
 
-func (client *Client) SearchAll() ([]Row, error) {
-	allRows, err := client.Search()
-	if len(allRows) == 0 {
-		return allRows, nil
+func (client *Client) SearchAll() <-chan Row {
+	channel := make(chan Row)
+	initialRows, err := client.Search()
+	if err != nil {
+		fmt.Printf("%+v\n", err)
 	}
-	lastRow := allRows[len(allRows)-1]
-	for {
-		client.params.SearchAfter = lastRow.Updated
-		moreRows, err := client.Search()
-		if err != nil {
-			return allRows, err
+	lastRow := initialRows[len(initialRows)-1]
+	allRows := 0
+	go func() {
+		for _, row := range initialRows {
+			if allRows >= client.maxSearchResults {
+				break
+			}
+			channel <- row
+			allRows += 1
 		}
-		allRows = append(allRows, moreRows...)
-		if len(allRows) >= client.maxSearchResults {
-			break
+		for allRows < client.maxSearchResults {
+			client.params.SearchAfter = lastRow.Updated
+			moreRows, err := client.Search()
+			if err != nil {
+				fmt.Printf("%+v\n", err)
+			}
+			lastRow = moreRows[len(moreRows)-1]
+			for _, row := range moreRows {
+				channel <- row
+				allRows += 1
+				if allRows >= client.maxSearchResults {
+					break
+				}
+			}
 		}
-		lastRow = moreRows[len(moreRows)-1]
-	}
-	if len(allRows) >= client.maxSearchResults {
-		allRows = allRows[0:client.maxSearchResults]
-	}
-	return allRows, err
+		close(channel)
+	}()
+	return channel
 }
 
 func (client *Client) Profile() (Profile, error) {
