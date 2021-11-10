@@ -73,7 +73,7 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 	}
 }
 
-func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
+func Test_Search_For_Two_Tags_Finds_10_Rows(t *testing.T) {
 	expect := 10
 	client := NewClient(
 		os.Getenv("H_TOKEN"),
@@ -107,7 +107,7 @@ func Test_Search_For_Two_Tags_Finds_10_Tags(t *testing.T) {
 
 }
 
-func Test_Search_For_Compound_Tag_Finds_3_Tags(t *testing.T) {
+func Test_Search_For_Compound_Tag_Finds_3_Rows(t *testing.T) {
 	expect := 3
 	client := NewClient(
 		os.Getenv("H_TOKEN"),
@@ -265,7 +265,7 @@ func Test_Finds_A_Private_Annotation(t *testing.T) {
 	}
 
 	if rows[0].Group == "__world__" {
-		t.Fatalf(`expected __world__, got %s`, rows[0].Group)
+		t.Fatalf(`expected %s, got __world__`, rows[0].Group)
 	}
 }
 
