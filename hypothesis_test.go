@@ -76,7 +76,7 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 func Test_Search_For_Two_Tags_Finds_10_Rows(t *testing.T) {
 	expect := 10
 	client := NewClient(
-		os.Getenv("H_TOKEN"),
+		"",
 		SearchParams{
 			Tags: []string{"media", "review"},
 		},
@@ -110,7 +110,7 @@ func Test_Search_For_Two_Tags_Finds_10_Rows(t *testing.T) {
 func Test_Search_For_Compound_Tag_Finds_3_Rows(t *testing.T) {
 	expect := 3
 	client := NewClient(
-		os.Getenv("H_TOKEN"),
+		"",
 		SearchParams{
 			Tags: []string{"social media"},
 		},
@@ -141,7 +141,7 @@ func Test_Search_For_User_Finds_3_Annos_For_User(t *testing.T) {
 	user := "judell"
 	expect := 3
 	client := NewClient(
-		os.Getenv("H_TOKEN"),
+		"",
 		SearchParams{
 			User: user,
 		},
@@ -171,7 +171,7 @@ func Test_Search_For_Uri_Finds_3_Annotations(t *testing.T) {
 	uri := "http://example.com/"
 	expect := 3
 	client := NewClient(
-		os.Getenv("H_TOKEN"),
+		"",
 		SearchParams{
 			Uri: uri,
 		},
@@ -201,7 +201,7 @@ func Test_Search_For_Wildcard_Uri_Finds_3_Matching_Uris(t *testing.T) {
 	wildcardUri := "https://www.nytimes/*"
 	expect := 3
 	client := NewClient(
-		os.Getenv("H_TOKEN"),
+		"",
 		SearchParams{
 			WildcardUri: wildcardUri,
 		},
@@ -272,7 +272,7 @@ func Test_Finds_A_Private_Annotation(t *testing.T) {
 func Test_Search_Param_Any_Finds_One_Annotation(t *testing.T) {
 	expect := 1
 	client := NewClient(
-		os.Getenv("H_TOKEN"),
+		"",
 		SearchParams{
 			Any: "jon",
 		},
@@ -294,7 +294,7 @@ func Test_Search_Param_Any_Finds_One_Annotation(t *testing.T) {
 func Test_Limit_500_In_Search_Params_Yields_500_Rows(t *testing.T) {
 	expect := 500
 	client := NewClient(
-		os.Getenv("H_TOKEN"),
+		"",
 		SearchParams{
 			Limit: fmt.Sprintf("%d", expect),
 		},
@@ -317,7 +317,7 @@ func Test_Limit_500_In_Search_Params_Yields_500_Rows(t *testing.T) {
 func Test_SearchParams_Overrides_MaxSearchResults_500_To_Yield_501_Rows(t *testing.T) {
 	expect := 501
 	client := NewClient(
-		os.Getenv("H_TOKEN"),
+		"",
 		SearchParams{
 			Limit: "501",
 		},
