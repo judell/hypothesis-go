@@ -130,7 +130,7 @@ func (client *Client) Search() ([]Row, error) {
 
 	r, err := client.httpClient.Do(req)
 	if err != nil {
-		return []Row{}, fmt.Errorf("error getting Hypothesis search results for %s: %v+", url, err.Error())
+		return []Row{}, fmt.Errorf("error getting Hypothesis search results for %s: %s", url, err.Error())
 	}
 	if r.StatusCode != 200 {
 		return []Row{}, fmt.Errorf("error getting Hypothesis search results for %s: %d %s", url, r.StatusCode, r.Status)
@@ -151,6 +151,10 @@ func (client *Client) SearchAll() <-chan Row {
 	initialRows, err := client.Search()
 	if err != nil {
 		fmt.Printf("%+v\n", err)
+	}
+	if len(initialRows) == 0 {
+		close(channel)
+		return channel
 	}
 	lastRow := initialRows[len(initialRows)-1]
 	allRows := 0
