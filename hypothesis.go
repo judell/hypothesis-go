@@ -120,10 +120,8 @@ func (client *Client) Search() ([]Row, error) {
 	}
 	if client.params.Uri != "" {
 		url += "&uri=" + params.Uri
-	} else {
-		if client.params.WildcardUri != "" {
-			url += "&wildcard_uri=" + params.WildcardUri
-		}
+	} else if client.params.WildcardUri != "" {
+		url += "&wildcard_uri=" + params.WildcardUri
 	}
 	req, _ := http.NewRequest("GET", url, nil)
 	if client.token != "" {
