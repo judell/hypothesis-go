@@ -73,6 +73,37 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 	}
 }
 
+func Test_Search_Finds_Rows_With_References(t *testing.T) {
+	client := NewClient(
+		os.Getenv("H_TOKEN"),
+		SearchParams{
+		},
+		1000, // we are betting at least one recent public anno will have references
+	)
+
+	rows := []Row{}
+	rowsWithReferences := 0
+    for row := range client.SearchAll() {
+		if row.ID == "" {
+			t.Fatalf(`no ID for row %+v`, row)
+		}
+		if len(row.References) > 0 {
+			rowsWithReferences += 1
+		}
+		rows = append(rows, row)
+	}
+
+	if len(rows) != 1000 {
+		t.Fatalf(`expected 1000 rows, got %d, `, len(rows))
+	}
+
+	if rowsWithReferences == 0 {
+		t.Fatalf(`expected > 0 rows with references, got %d, `, rowsWithReferences)
+	}
+ 
+}
+
+
 func Test_Search_For_Two_Tags_Finds_10_Rows(t *testing.T) {
 	expect := 10
 	client := NewClient(

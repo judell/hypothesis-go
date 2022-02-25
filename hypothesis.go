@@ -67,16 +67,17 @@ type Target = struct {
 	Selector []Selector
 }
 type Row struct {
-	ID       string   `json:"id"`
-	Created  string   `json:"created"`
-	Updated  string   `json:"updated"`
-	User     string   `json:"user"`
-	URI      string   `json:"uri"`
-	Text     string   `json:"text"`
-	Tags     []string `json:"tags"`
-	Group    string   `json:"group"`
-	Target   []Target `json:"target"`
-	Document struct {
+	ID         string   `json:"id"`
+	Created    string   `json:"created"`
+	Updated    string   `json:"updated"`
+	User       string   `json:"user"`
+	URI        string   `json:"uri"`
+	Text       string   `json:"text"`
+	Tags       []string `json:"tags"`
+	Group      string   `json:"group"`
+	Target     []Target `json:"target"`
+	References []string `json:"references"`
+	Document   struct {
 		Title []string `json:"title"`
 	} `json:"document"`
 	UserInfo struct {
