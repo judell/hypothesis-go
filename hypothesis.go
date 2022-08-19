@@ -110,7 +110,7 @@ func NewClient(token string, params SearchParams, maxSearchResults int) *Client 
 func (client *Client) Search() ([]Row, error) {
 	params := client.params
 	if params.Group == "" {
-		params.Group = "__world__"
+		params.Group = "__world__" // fix breaking change in api, group now required
 	}
 	tagArray := apply(params.Tags, tagParamWrap)
 	tags := strings.Join(tagArray, "")
