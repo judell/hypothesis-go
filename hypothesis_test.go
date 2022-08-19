@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 	"testing"
 )
 
@@ -73,8 +74,8 @@ func Test_Search_With_Token_Finds_Rows_In_Private_Group(t *testing.T) {
 	}
 }
 
-func Test_Search_For_Two_Tags_Finds_10_Rows(t *testing.T) {
-	expect := 10
+func Test_Search_For_Two_Tags_Finds_2_Rows(t *testing.T) {
+	expect := 2
 	client := NewClient(
 		"",
 		SearchParams{
@@ -369,10 +370,10 @@ func Test_Selectors_To_Exact_Without_TextQuoteSelector_Returns_Empty(t *testing.
 	}
 }
 
-func stringMatchesAnyStringInSlice(str string, strings []string) bool {
+func stringMatchesAnyStringInSlice(str string, strs []string) bool {
 	var ret = false
-	for _, _str := range strings {
-		m, _ := regexp.Match(str, []byte(_str))
+	for _, _str := range strs {
+		m, _ := regexp.Match(str, []byte(strings.ToLower(_str)))
 		if m {
 			ret = true
 		}

@@ -109,6 +109,9 @@ func NewClient(token string, params SearchParams, maxSearchResults int) *Client 
 
 func (client *Client) Search() ([]Row, error) {
 	params := client.params
+	if params.Group == "" {
+		params.Group = "__world__"
+	}
 	tagArray := apply(params.Tags, tagParamWrap)
 	tags := strings.Join(tagArray, "")
 	url := "https://hypothes.is/api/search?limit=200&search_after=" + url.QueryEscape(params.SearchAfter) +
