@@ -8,6 +8,25 @@ import (
 	"testing"
 )
 
+func Test_Uri_Has_Annos_With_References(t *testing.T) {
+	client := NewClient(
+		"",
+		SearchParams{
+			Uri: "https://web.hypothes.is/blog/introducing-search-and-profiles",
+		},
+		100,
+	)
+	maxRefs := 0
+	for row := range client.SearchAll() {
+		if len(row.References) > 0 {
+			fmt.Printf("%v", row.References)
+		}
+		maxRefs += len(row.References)
+	}
+	if maxRefs < 10  {
+		t.Fatalf(`expected at least %d references`, maxRefs)
+	}
+}
 func Test_Search_Finds_Default_2000_Rows(t *testing.T) {
 	expect := 2000
 	client := NewClient(

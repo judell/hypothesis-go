@@ -74,6 +74,7 @@ type Row struct {
 	URI      string   `json:"uri"`
 	Text     string   `json:"text"`
 	Tags     []string `json:"tags"`
+	References  []string `json:"references"`
 	Group    string   `json:"group"`
 	Target   []Target `json:"target"`
 	Document struct {
@@ -154,6 +155,8 @@ func (client *Client) SearchAll() <-chan Row {
 	initialRows, err := client.Search()
 	if err != nil {
 		fmt.Printf("%+v\n", err)
+		close(channel)
+		return channel
 	}
 	if len(initialRows) == 0 {
 		close(channel)
