@@ -19,7 +19,7 @@ func Test_Uri_Has_Annos_With_References(t *testing.T) {
 	maxRefs := 0
 	for row := range client.SearchAll() {
 		if len(row.References) > 0 {
-			fmt.Printf("%v", row.References)
+			fmt.Printf("id: %v refs: %v\n", row.ID, row.References)
 		}
 		maxRefs += len(row.References)
 	}
