@@ -247,13 +247,13 @@ func Test_Search_For_Wildcard_Uri_Finds_3_Matching_Uris(t *testing.T) {
 	}
 }
 
-func Test_Profile(t *testing.T) {
+func Test_GetProfile(t *testing.T) {
 	client := NewClient(
 		os.Getenv("H_TOKEN"),
 		SearchParams{},
 		0,
 	)
-	profile, err := client.Profile()
+	profile, err := client.GetProfile()
 
 	if len(profile.Groups) == 1 {
 		t.Fatalf(`%v`, err)

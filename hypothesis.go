@@ -192,7 +192,7 @@ func (client *Client) SearchAll() <-chan Row {
 	return channel
 }
 
-func (client *Client) Profile() (Profile, error) {
+func (client *Client) GetProfile() (Profile, error) {
 	url := "https://hypothes.is/api/profile"
 	req, _ := http.NewRequest("GET", url, nil)
 	if client.token != "" {

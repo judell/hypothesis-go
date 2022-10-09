@@ -84,7 +84,7 @@ If you authenticate with your token you can call the [Profile] function to list 
 		SearchParams{},
 		0,
 	)
-	profile, err := client.Profile()
+	profile, err := client.GetProfile()
 
 Here, 'profile' is a [hypothesis.Profile] which includes [hypothesis.Profile.Groups], an array of structs that include the names and ids of your private groups.
 
