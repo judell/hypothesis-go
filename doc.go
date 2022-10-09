@@ -77,7 +77,7 @@ For more search examples, see the [Steampipe Hypothesis plugin].
 
 # List private groups
 
-If you authenticate with your token you can call the [Profile] function to list your private groups. 
+If you authenticate with your token you can call [hypothesis.Client.GetProfile] to list your private groups. 
 
 	client := NewClient(
 		os.Getenv("H_TOKEN"),
@@ -94,7 +94,6 @@ See [anchoring].
 
 [Hypothesis token]: https://hypothes.is/account/developer
 [Steampipe Hypothesis plugin]: https://hub.steampipe.io/plugins/turbot/hypothesis
-[Profile]: https://
 */
 package hypothesis
 
