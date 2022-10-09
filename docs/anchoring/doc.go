@@ -7,7 +7,7 @@ When software anchors annotations in text, it reads the TextQuoteSelector and/or
 
 When software analyzes an annotated corpus it can use the selector data to, e.g., visualize overlapping annotations. [hypothesis.SelectorsToExact] is a convenience function that returns the Exact quote from an array of selectors.
 */
-package hypothesis
+package anchoring
 
 type ForceImport string
 
