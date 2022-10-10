@@ -94,12 +94,6 @@ See [anchoring].
 
 [Hypothesis token]: https://hypothes.is/account/developer
 [Steampipe Hypothesis plugin]: https://hub.steampipe.io/plugins/turbot/hypothesis
+[anchoring]: https://pkg.go.dev/github.com/judell/hypothesis-go/docs/anchoring
 */
 package hypothesis
-
-import (
-	"github.com/judell/hypothesis-go/docs/anchoring"
-)
-
-var forceImportAnchoring anchoring.ForceImport
-

@@ -20,5 +20,3 @@ When software analyzes an annotated corpus it can use the selector data to, e.g.
 */
 package anchoring
 
-type ForceImport string
-
