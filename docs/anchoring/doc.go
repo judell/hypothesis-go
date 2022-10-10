@@ -9,6 +9,7 @@ When software analyzes an annotated corpus it can use the selector data to, e.g.
 
 [hypothesis.Client]: https://pkg.go.dev/github.com/judell/hypothesis-go#Client
 [hypothesis.Row]: https://pkg.go.dev/github.com/judell/hypothesis-go#Row
+[hypothesis.Target]: https://pkg.go.dev/github.com/judell/hypothesis-go#Target
 [hypothesis.Selector]: https://pkg.go.dev/github.com/judell/hypothesis-go#Selector
 [hypothesis.Selector.Type]: https://pkg.go.dev/github.com/judell/hypothesis-go#Selector.Type
 [hypothesis.Selector.Start]: https://pkg.go.dev/github.com/judell/hypothesis-go#Selector.Start

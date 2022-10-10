@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go#hdr-Create-a-client
 type Client struct {
 	token            string
 	params           SearchParams
@@ -16,6 +17,7 @@ type Client struct {
 	httpClient       http.Client
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go#hdr-List_private_groups
 type Profile struct {
 	Userid    string `json:"userid"`
 	Authority string `json:"authority"`
@@ -37,11 +39,13 @@ type Profile struct {
 	} `json:"user_info"`
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go#hdr-Search_for_annotations
 type SearchResult struct {
 	Total int   `json:"total"`
 	Rows  []Row `json:"rows"`
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go#hdr-Search_for_annotations
 type SearchParams struct {
 	SearchAfter string
 	Limit       string
@@ -53,6 +57,7 @@ type SearchParams struct {
 	Tags        []string
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go/docs/anchoring
 type Selector = struct {
 	Type   string `json:"type"`
 	Start  int    `json:"start,omitempty"`
@@ -62,6 +67,7 @@ type Selector = struct {
 	Suffix string `json:"suffix,omitempty"`
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go/docs/anchoring
 type Target = struct {
 	Source   string `json:"source"`
 	Selector []Selector
@@ -85,6 +91,7 @@ type Row struct {
 	} `json:"user_info"`
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go#hdr-Create_a_client
 func NewClient(token string, params SearchParams, maxSearchResults int) *Client {
 
 	var _maxSearchResults int
@@ -108,6 +115,7 @@ func NewClient(token string, params SearchParams, maxSearchResults int) *Client 
 	return client
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go#hdr-Search_for_annotations
 func (client *Client) Search() ([]Row, error) {
 	params := client.params
 	if params.Group == "" {
@@ -150,6 +158,7 @@ func (client *Client) Search() ([]Row, error) {
 	return searchResult.Rows, nil
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go#hdr-Search_for_annotations
 func (client *Client) SearchAll() <-chan Row {
 	channel := make(chan Row)
 	initialRows, err := client.Search()
@@ -192,6 +201,7 @@ func (client *Client) SearchAll() <-chan Row {
 	return channel
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go#hdr-List_private_groups
 func (client *Client) GetProfile() (Profile, error) {
 	url := "https://hypothes.is/api/profile"
 	req, _ := http.NewRequest("GET", url, nil)
@@ -212,6 +222,7 @@ func (client *Client) GetProfile() (Profile, error) {
 	return profile, err
 }
 
+// See https://pkg.go.dev/github.com/judell/hypothesis-go/docs/anchoring
 func SelectorsToExact(selectors []Selector) (string, error) {
 	empty := ""
 	if len(selectors) == 0 {
