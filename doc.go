@@ -90,7 +90,7 @@ Here, 'profile' is a [hypothesis.Profile] which includes [hypothesis.Profile.Gro
 
 # Anchoring
 
-See [anchoring].
+An annotation may include an array of [hypothesis.Selector]. These structures define how the annotation "anchors" to the segment it refers to. See [anchoring].
 
 [Hypothesis token]: https://hypothes.is/account/developer
 [Steampipe Hypothesis plugin]: https://hub.steampipe.io/plugins/turbot/hypothesis
